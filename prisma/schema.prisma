@@ -1,0 +1,33 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  createdAt DateTime @default(now()) @map("created_at")
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int @map("user_id")
+  @@map("posts")
+}
+
+model User {
+ id Int @id @default(autoincrement())
+ email String @unique
+ password String
+ role Role @default(USER)
+ posts Post[]
+ @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
